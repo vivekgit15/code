@@ -8,11 +8,12 @@ const ViewTransactions = () => {
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch all transactions
   const fetchTransactions = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/transactions');
+      const res = await axios.get(`${backendUrl}/transactions`);
 
       // Normalize response to an array (handles res.data or res.data.data shapes)
       const payload = res.data;
@@ -27,7 +28,6 @@ const ViewTransactions = () => {
       setTransactions(list);
       setFiltered(list);
     } catch (error) {
-      console.error('Error fetching transactions:', error);
       message.error('Failed to fetch transactions');
     } finally {
       setLoading(false);
@@ -53,7 +53,6 @@ const ViewTransactions = () => {
   const columns = [
     {
       title: "Product Name",
-     
       key: "productName",
       render: (_, record) => {
       if (!record.inventory) {
@@ -62,12 +61,7 @@ const ViewTransactions = () => {
     
       return record.inventory?.product?.name || "-";
     }
-      // sorter: (a, b) => {
-      //   const A = a.inventory?.product?.name || '';
-      //   const B = b.inventory?.product?.name || '';
-      //   return A.localeCompare(B);
       
-      // }
     },
     {
       title: 'Material Grade',
@@ -135,7 +129,7 @@ const ViewTransactions = () => {
           color:"black"
         }}
       >
-        📊 All Stock Transactions
+      All Stock Transactions
       </h1>
 
       <Row justify="space-between" style={{ marginBottom: '1rem' }}>

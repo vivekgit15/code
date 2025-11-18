@@ -7,6 +7,7 @@ const { Option } = Select;
 const AddProduct = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const onFinish = async (values) => {
     const cleanData = {
@@ -27,13 +28,13 @@ const AddProduct = () => {
 
     try {
       setLoading(true);
-      await axios.post('http://localhost:8000/api/products', cleanData, {
+      await axios.post(`${backendUrl}/products`, cleanData, {
         headers: { 'Content-Type': 'application/json' }
       });
-      message.success('✅ Product created successfully!');
+      message.success('Product created successfully!');
       form.resetFields(); // clear inputs after success
     } catch (error) {
-      console.error('❌ Error adding product:', error.response?.data || error.message);
+      console.error('Error adding product:', error.response?.data || error.message);
       message.error(error.response?.data?.message || 'Failed to add product');
     } finally {
       setLoading(false);
@@ -58,7 +59,7 @@ const AddProduct = () => {
           color: 'black',
         }}
       >
-        🧱 Add New Steel Product
+     Add New Steel Product
       </h1>
 
       <Form
@@ -134,19 +135,6 @@ const AddProduct = () => {
             </Form.Item>
           </Col>
 
-
-
-          {/* <Col xs={24} sm={12} md={8} lg={4}>
-            <Form.Item label="Unit" name="unit" initialValue="KG">
-              <Select>
-                <Option value="KG">KG</Option>
-                <Option value="TON">TON</Option>
-                <Option value="PIECE">PIECE</Option>
-                <Option value="METER">METER</Option>
-              </Select>
-            </Form.Item>
-          </Col> */}
-
           <Col xs={24} sm={12} md={8} lg={4}>
             <Form.Item
               label="Price per Unit (₹)"
@@ -172,8 +160,7 @@ const AddProduct = () => {
               required="true"
 
             >
-              {/* <InputNumber min={0} style={{ width: '100%' }} placeholder="e.g. 80" /> */}
-
+              
               <Select placeholder="Select type">
                 <Option value="KG">KG (Kilogram)</Option>
                 <Option value="PIECES">PIECES</Option>
@@ -186,12 +173,6 @@ const AddProduct = () => {
               </Select>
             </Form.Item>
           </Col>
-
-          {/* <Col xs={24} sm={12} md={8} lg={6}>
-            <Form.Item label="Location" name="location">
-              <Input placeholder="e.g. Warehouse A - Rack 5" />
-            </Form.Item>
-          </Col> */}
 
           <Col xs={24} sm={12} md={12} lg={12}>
             <Form.Item label="Description" name="description">

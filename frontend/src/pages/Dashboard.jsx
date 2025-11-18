@@ -1,20 +1,18 @@
 import React from 'react';
 import { Row, Col, Card } from 'antd';
-// import Loader from '../components/Loader';
-import DailyChart from '../components/DailyChart';
-import MonthlyChart from '../components/MonthlyChart';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 const Dashboard = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch dashboard summary
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/dashboard/summary');
+        const res = await axios.get(`${backendUrl}/dashboard/summary`);
         setSummary(res.data.data);
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
@@ -25,7 +23,7 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-//   if (loading) return <Loader />;
+
 
   return (
     <div
@@ -45,7 +43,7 @@ const Dashboard = () => {
           color:'black',
         }}
       >
-        📊 Inventory Dashboard
+     Inventory Dashboard
       </h1>
 
       {/* Summary Cards */}
@@ -85,23 +83,7 @@ const Dashboard = () => {
         </Col>
 
         <Col xs={24} sm={12} md={6}>
-          {/* <Card
-            style={{
-              background: '#fff',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-              borderRadius: '10px',
-              textAlign: 'center',
-              padding: '1rem',
-            }}
-          >
-            <h3 style={{ color: '#555' }}>Total OUT</h3>
-            <h1 style={{ fontSize: '2rem', color: '#e11d48' }}>
-              {summary?.totalOut || 0}
-            </h1>
-          </Card> */}
-        
-
-        {/* <Col xs={24} sm={12} md={6}> */}
+          
           <Card
             style={{
               background: '#fff',
@@ -120,35 +102,6 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      {/* Charts Section */}
-      {/* <div
-        style={{
-          background: '#fff',
-          padding: '2rem',
-          borderRadius: '10px',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-          marginBottom: '2rem',
-        }}
-      >
-        <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          📅 Daily Stock Movement
-        </h2>
-        <DailyChart />
-      </div>
-
-      <div
-        style={{
-          background: '#fff',
-          padding: '2rem',
-          borderRadius: '10px',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        }}
-      >
-        <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          📆 Monthly Stock Summary
-        </h2>
-        <MonthlyChart />
-      </div> */}
     </div>
   );
 };

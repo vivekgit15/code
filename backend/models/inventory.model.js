@@ -9,7 +9,7 @@ const inventorySchema = new mongoose.Schema(
     },
     lotNumber: { type: String, required: true },
     heatNumber: {type:String , required:true},
-    location: String,
+    location: {type:String, required:true},
     safetyStockLevel:Number,
     batchNumber:{type:String , required:true},
     quantity: { type: Number, default: 0 },
@@ -22,5 +22,5 @@ const inventorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ensure the exported model name matches the populate('Inventory')
+
 module.exports = mongoose.model("Inventory", inventorySchema);

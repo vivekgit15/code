@@ -8,14 +8,15 @@ const AddInventory = () => {
   const [form] = Form.useForm();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // ✅ Fetch products on mount (to link inventory)
+  // Fetch products on mount (to link inventory)
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/products");
+        const res = await axios.get(`${backendUrl}/products`);
         setProducts(res.data.data);
-        // console.log("Products API response:", res.data);
+        
 
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -25,11 +26,11 @@ const AddInventory = () => {
     fetchProducts();
   }, []);
 
-  // ✅ Submit form data
+  // Submit form data
   const onFinish = async (values) => {
     const cleanData = {
       ...values,
-      product: values.product, // product ID
+      product: values.product, 
       location: values.location || "",
       heatNumber: values.heatNumber || "",
       batchNumber: values.batchNumber || "",
@@ -39,14 +40,14 @@ const AddInventory = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:8000/api/inventory", cleanData, {
+      await axios.post(`${backendUrl}/inventory`, cleanData, {
         headers: { "Content-Type": "application/json" },
       });
 
-      message.success("✅ Inventory added successfully!");
+      message.success("Inventory added successfully!");
       form.resetFields();
     } catch (error) {
-      console.error("❌ Error adding inventory:", error.response?.data || error.message);
+      console.error("Error adding inventory:", error.response?.data || error.message);
       message.error(error.response?.data?.message || "Failed to add inventory");
     } finally {
       setLoading(false);
@@ -71,7 +72,7 @@ const AddInventory = () => {
           color: "black",
         }}
       >
-        📦 Add New Inventory Lot
+       Add New Inventory Lot
       </h1>
 
       <Form
@@ -107,28 +108,7 @@ const AddInventory = () => {
             </Form.Item>
           </Col>
 
-          {/* Quantity */}
-          {/* <Col xs={24} sm={12} md={8} lg={4}>
-            <Form.Item
-              label="Quantity"
-              name="quantity"
-              rules={[{ required: true, message: "Enter quantity" }]}
-            >
-              <InputNumber min={0} style={{ width: "100%" }} placeholder="e.g. 100" />
-            </Form.Item>
-          </Col> */}
-
-          {/* Unit
-          <Col xs={24} sm={12} md={8} lg={4}>
-            <Form.Item label="Unit" name="unit" initialValue="KG">
-              <Select>
-                <Option value="KG">KG</Option>
-                <Option value="TON">TON</Option>
-                <Option value="PIECE">PIECE</Option>
-                <Option value="METER">METER</Option>
-              </Select>
-            </Form.Item>
-          </Col> */}
+          
 
           {/* Location */}
           <Col xs={24} sm={12} md={8} lg={4}>

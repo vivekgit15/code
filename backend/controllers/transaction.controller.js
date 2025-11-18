@@ -1,7 +1,7 @@
 const Transaction = require('../models/transaction.model');
 const Inventory = require('../models/inventory.model');
 const Product = require('../models/product.model');
-const { addLog } = require('./log.controller'); 
+const { addLog } = require('./log.controller'); // <-- Import logger
 
 // helper: safely extract user info from request
 const getUserFromReq = (req) => {
@@ -93,7 +93,7 @@ const createTransaction = async (req, res) => {
       remarks,
     });
 
-    // ✅ Log successful transaction
+    // Log successful transaction
     await addLog({
       userId,
       userEmail,

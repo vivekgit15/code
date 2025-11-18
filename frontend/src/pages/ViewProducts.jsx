@@ -18,8 +18,7 @@ import {
   EditOutlined,
   SearchOutlined,
 } from '@ant-design/icons';
-// Import useNavigate
-// import { useNavigate } from 'react-router-dom';
+
 
 const ViewProducts = () => {
   const [products, setProducts] = useState([]);
@@ -31,20 +30,17 @@ const ViewProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [form] = Form.useForm();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // Initialize navigate
   const navigate = useNavigate();
-
-  // (REMOVED expandable row states: expandedRowKeys, inventoryData)
 
   // Fetch all products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/products');
+      const res = await axios.get(`${backendUrl}/products`);
       setProducts(res.data.data);
       setFiltered(res.data.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
       message.error('Failed to fetch products');
     } finally {
       setLoading(false);
@@ -60,11 +56,10 @@ const ViewProducts = () => {
   // Delete product
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/products/${id}`);
+      await axios.delete(`${backendUrl}/products/${id}`);
       message.success('Product deleted successfully!');
       fetchProducts();
     } catch (error) {
-      console.error('Delete error:', error);
       message.error('Failed to delete product');
     }
   };
@@ -89,7 +84,7 @@ const ViewProducts = () => {
   const handleUpdate = async (values) => {
     try {
       await axios.put(
-        `http://localhost:8000/api/products/${editProduct._id}`,
+        `${backendUrl}/products/${editProduct._id}`,
         values,
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -97,12 +92,11 @@ const ViewProducts = () => {
       setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
-      console.error('Update error:', error);
       message.error('Failed to update product');
     }
   };
 
-  // (REMOVED expandedRowRender function)
+  
 
   const columns = [
     {
@@ -146,7 +140,6 @@ const ViewProducts = () => {
             <Button danger type="primary" icon={<DeleteOutlined />} />
           </Popconfirm>
 
-          {/* (REMOVED "View Inventory" button) */}
         </div>
       ),
     },
@@ -170,7 +163,7 @@ const ViewProducts = () => {
           color: 'black',
         }}
       >
-        📋 All Products
+      All Products
       </h1>
 
       {/* Search + Refresh */}
@@ -191,7 +184,7 @@ const ViewProducts = () => {
         </Col>
       </Row>
 
-      {/* Table - NO LONGER EXPANDABLE */}
+      
       <div
         style={{
           background: '#fff',
@@ -205,21 +198,18 @@ const ViewProducts = () => {
           dataSource={filtered}
           rowKey="_id"
           loading={loading}
-          // (REMOVED expandable prop)
           pagination={{ pageSize: 8 }}
           scroll={{ x: true }}
         />
       </div>
 
-      {/* Edit Modal (No changes) */}
       <Modal
-        title="✏️ Edit Product"
+        title="Edit Product"
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
         <Form form={form} layout="vertical" onFinish={handleUpdate}>
-          {/* ... (Your form items are all correct) ... */}
            <Form.Item name="name" label="Product Name" rules={[{ required: true }]}>
              <Input />
            </Form.Item>

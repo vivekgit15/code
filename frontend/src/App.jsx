@@ -13,6 +13,7 @@ import ViewLogs from "./pages/ViewLogs";
 import { SignedIn, SignedOut, RedirectToSignIn, SignIn, UserButton } from "@clerk/clerk-react";
 import { Button } from "antd";
 import AuthInitializer from "./AuthInitializer"
+// import 'antd/dist/reset.css'
 
 const App = () => {
   return (
@@ -62,7 +63,7 @@ const App = () => {
         </Routes>
       </SignedIn>
 
-      {/* 🚪 Show Clerk Sign-in page when logged out */}
+      
       <SignedOut>
         <Routes>
           <Route path="/*" element={<RedirectToSignIn />} />

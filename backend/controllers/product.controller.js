@@ -1,8 +1,8 @@
 const Product = require("../models/product.model");
 const Inventory = require("../models/inventory.model");
-const { addLog } = require("./log.controller"); // ✅ import logger
+const { addLog } = require("./log.controller"); 
 
-// 🔹 Extract user info safely (Clerk-compatible)
+// Extract user info safely (Clerk-compatible)
 const getUserFromReq = (req) => {
   const userId =
     req.headers["x-user-id"] ||
@@ -28,7 +28,7 @@ const createProduct = async (req, res) => {
   try {
     const body = req.body;
 
-    // ✅ validation + duplicates
+    // validation + duplicates
     if (typeof body.pricePerUnit === "string") body.pricePerUnit = parseFloat(body.pricePerUnit);
     const existingProduct = await Product.findOne({
       name: body.name.trim(),
@@ -64,7 +64,7 @@ const createProduct = async (req, res) => {
 
     res.status(201).json({ success: true, data: newProduct });
   } catch (error) {
-    // ✅ Catch validation errors & include full info
+    // Catch validation errors & include full info
     await addLog({
       userId,
       userEmail,
@@ -183,7 +183,7 @@ const updateProduct = async (req, res) => {
       userEmail,
       action: "Product Update Error",
       entityType: "Product",
-      entityId: req.params.id, // ✅ always include attempted id
+      entityId: req.params.id, // always include attempted id
       details: { error: error.message, body: req.body },
       ip: req.ip,
     });

@@ -26,6 +26,7 @@ const InventoryDetails = () => {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // Fetch inventory + transactions
   useEffect(() => {
@@ -33,8 +34,8 @@ const InventoryDetails = () => {
       setLoading(true);
       try {
         const [inventoryRes, transactionRes] = await Promise.all([
-          axios.get(`http://localhost:8000/api/inventory/${id}`),
-          axios.get(`http://localhost:8000/api/transactions/inventory/${id}`)
+          axios.get(`${backendUrl}/inventory/${id}`),
+          axios.get(`${backendUrl}/transactions/inventory/${id}`)
         ]);
 
         const invData = inventoryRes?.data?.data ?? inventoryRes?.data ?? null;
@@ -63,7 +64,6 @@ const InventoryDetails = () => {
       ),
     },
     { title: "Quantity", dataIndex: "quantity", key: "quantity" },
-    { title: "Lot Number", dataIndex: "lotNumber", key: "lotNumber" },
     {
       title: "Date",
       dataIndex: "createdAt",

@@ -1,15 +1,6 @@
 // controllers/log.controller.js
 const Log = require('../models/log.model');
 
-/**
- * addLog helper - use across controllers to record an action
- * userId: string (clerk id or app user id)
- * action: string e.g. "Product Created"
- * entityType: string e.g. "Product"
- * entityId: ObjectId or string (optional)
- * details: object or string (optional)
- * ip: string (optional)
- */
 const addLog = async ({ userId = 'unknown', userEmail, action, entityType, entityId = null, details = {}, ip = '' }) => {
   try {
     const entry = await Log.create({

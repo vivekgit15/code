@@ -21,8 +21,9 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // Get the 'id' from the URL (e.g., /products/123)
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -30,14 +31,13 @@ const ProductDetails = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch product and inventory in parallel, with a fallback for inventory URL
-        const productReq = axios.get(`http://localhost:8000/api/products/${id}`);
+        
+        const productReq = axios.get(`${backendUrl}/products/${id}`);
         const inventoryReq = axios
-          .get(`http://localhost:8000/api/inventory/product/${id}`)
+          .get(`${backendUrl}/inventory/product/${id}`)
           .catch(async (err) => {
-            // fallback: some backends expose query param style
-            console.warn('Primary inventory endpoint failed, trying fallback:', err.message);
-            return axios.get(`http://localhost:8000/api/inventory?product=${id}`);
+            
+            return axios.get(`${backendUrl}/inventory?product=${id}`);
           });
 
         const [productRes, inventoryRes] = await Promise.all([productReq, inventoryReq]);
@@ -63,12 +63,8 @@ const ProductDetails = () => {
 
         setInventory(invList);
 
-        // debug log — remove after confirming correct shape
-        // console.log('Product fetch:', prod);
-        // console.log('Inventory raw response:', inventoryRes?.data);
-        // console.log('Inventory normalized list:', invList);
+        
       } catch (error) {
-        // console.error('Failed to fetch product details:', error);
         message.error('Failed to load data. Please try again.');
       } finally {
         setLoading(false);
@@ -82,18 +78,8 @@ const ProductDetails = () => {
   const inventoryColumns = [
     { title: 'Lot No', dataIndex: 'lotNumber', key: 'lotNumber' },
     { title: 'Quantity', dataIndex: 'quantity', key: 'quantity' },
-    // { title: 'Unit', dataIndex: 'unit', key: 'unit' },
     {title:'Location' , dataIndex:'location' , key:'location'},
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'status',
-    //   key: 'status',
-    //   render: (status) => (
-    //     <Tag color={status === 'Available' ? 'green' : 'orange'}>
-    //       {status.toUpperCase()}
-    //     </Tag>
-    //   ),
-    // },
+    
     {
       title: 'Created At',
       dataIndex: 'createdAt',
@@ -177,7 +163,7 @@ const ProductDetails = () => {
         }}
       >
         <h2 style={{ marginBottom: '1rem' , color:'black' }}>
-          📦 Inventory for {product.name}
+      Inventory for {product.name}
         </h2>
         <Table
           columns={inventoryColumns}

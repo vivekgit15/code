@@ -8,10 +8,10 @@ const Transaction = require('../models/transaction.model');
  */
 const getDashboardSummary = async (req, res) => {
   try {
-    // ✅ Total Products
+    // Total Products
     const totalProducts = await Product.countDocuments();
 
-    // ✅ Total IN and OUT quantities from Transaction model
+    // Total IN and OUT quantities from Transaction model
     const totalInAgg = await Transaction.aggregate([
       { $match: { type: 'IN' } },
       { $group: { _id: null, totalIn: { $sum: '$quantity' } } },
@@ -25,13 +25,13 @@ const getDashboardSummary = async (req, res) => {
     const totalIn = totalInAgg[0]?.totalIn || 0;
     const totalOut = totalOutAgg[0]?.totalOut || 0;
 
-    // ✅ Calculate total current stock (sum of all inventory quantities)
+    // Calculate total current stock (sum of all inventory quantities)
     const totalStockAgg = await Inventory.aggregate([
       { $group: { _id: null, totalStock: { $sum: '$quantity' } } },
     ]);
     const totalStock = totalStockAgg[0]?.totalStock || 0;
 
-    // ✅ Calculate total stock value (pricePerUnit * quantity via product lookup)
+    // Calculate total stock value (pricePerUnit * quantity via product lookup)
     const totalStockValueAgg = await Inventory.aggregate([
       {
         $lookup: {

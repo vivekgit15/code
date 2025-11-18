@@ -3,7 +3,7 @@ const Product = require("../models/product.model");
 const Transaction = require("../models/transaction.model");
 const { addLog } = require("./log.controller"); // ✅ Import logger
 
-// 🔹 Helper to extract user info from request
+// Helper to extract user info from request
 const getUserFromReq = (req) => {
   const userId =
     req?.auth?.userId ||
@@ -18,7 +18,7 @@ const getUserFromReq = (req) => {
   return { userId, userEmail };
 };
 
-// ✅ Helper: Calculate available balance for a single inventory
+// Helper: Calculate available balance for a single inventory
 const calculateBalance = async (inventoryId) => {
   const transactions = await Transaction.find({ inventory: inventoryId });
   let balance = 0;
@@ -222,10 +222,10 @@ const deleteInventory = async (req, res) => {
       return res.status(404).json({ message: "Inventory not found" });
     }
 
-    // 2️⃣ Calculate current available quantity (via transactions)
+    // Calculate current available quantity (via transactions)
     const availableQuantity = await calculateBalance(inventory._id);
 
-    // 3️⃣ Block deletion if stock is not zero
+    // Block deletion if stock is not zero
     if (availableQuantity > 0) {
       await addLog({
         userId,
@@ -243,7 +243,7 @@ const deleteInventory = async (req, res) => {
       });
     }
 
-    // 4️⃣ Proceed to soft delete
+    // Proceed to soft delete
     const deletedInventory = await Inventory.findByIdAndUpdate(
       req.params.id,
       { isDeleted: true },

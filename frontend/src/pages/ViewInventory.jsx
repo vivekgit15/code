@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, message, Tag, Button, Modal, Form, InputNumber, Input, Select, Popconfirm } from "antd";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const { Option } = Select;
 
 const ViewInventory = () => {
   const [inventory, setInventory] = useState([]);
@@ -10,15 +10,15 @@ const ViewInventory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInventory, setSelectedInventory] = useState(null);
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // ✅ Fetch all inventory on mount
+  // Fetch all inventory on mount
   const fetchInventory = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/api/inventory");
+      const res = await axios.get(`${backendUrl}/inventory`);
       
-      // Log the raw response to debug
-      console.log("Raw inventory response:", res.data);
 
       // Normalize the response similar to ProductDetail.jsx
       const payload = res.data;
@@ -34,11 +34,10 @@ const ViewInventory = () => {
         list = payload.inventory;
       }
 
-      console.log("Normalized inventory list:", list);
+      
       setInventory(list);
 
     } catch (error) {
-      console.error("Error fetching inventory:", error);
       message.error("Failed to load inventory");
     } finally {
       setLoading(false);
@@ -49,19 +48,18 @@ const ViewInventory = () => {
     fetchInventory();
   }, []);
 
-  // ✅ Delete inventory
+  // Delete inventory
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/inventory/${id}`);
+      await axios.delete(`${backendUrl}/inventory/${id}`);
       message.success("Inventory deleted successfully!");
       fetchInventory(); // refresh table
     } catch (error) {
-      console.error("Delete error:", error);
       message.error("Failed to delete inventory");
     }
   };
 
-  // ✅ Open modal for editing
+  // Open modal for editing
   const handleEdit = (record) => {
     setSelectedInventory(record);
     // set only the fields the form expects (avoid nested product object being passed directly)
@@ -73,27 +71,34 @@ const ViewInventory = () => {
     setIsModalOpen(true);
   };
 
-  // ✅ Submit edit form
+  // Submit edit form
   const handleUpdate = async () => {
     try {
       const values = await form.validateFields();
-      await axios.put(`http://localhost:8000/api/inventory/${selectedInventory._id}`, values);
+      await axios.put(`${backendUrl}/inventory/${selectedInventory._id}`, values);
       message.success("Inventory updated successfully!");
       setIsModalOpen(false);
       fetchInventory();
     } catch (error) {
-      console.error("Update error:", error);
       message.error("Failed to update inventory");
     }
   };
 
-  // ✅ Table columns
+  // Table columns
   const columns = [
     {
       title: "Product Name",
       dataIndex: ["product", "name"],
       key: "productName",
-      render: (text) => text || "-",
+      render: (text,record) =>(
+        <Button
+                  type="link"
+                  onClick={() => navigate(`/inventory/${record._id}`)} // Navigate to detail page
+                >
+                  {text}
+                </Button>
+      )
+      ,
     },
     {
       title: "Material Grade",
@@ -187,7 +192,7 @@ const ViewInventory = () => {
           color: "black",
         }}
       >
-        📊 Inventory Overview
+      Inventory Overview
       </h1>
 
       <Table
@@ -199,7 +204,7 @@ const ViewInventory = () => {
         pagination={{ pageSize: 10 }}
       />
 
-      {/* ✏️ Edit Modal */}
+      
       <Modal
         title="Update Inventory"
         open={isModalOpen}
@@ -209,15 +214,6 @@ const ViewInventory = () => {
       >
         <Form layout="vertical" form={form}>
          
-
-          {/* <Form.Item label="Unit" name="unit">
-            <Select>
-              <Option value="KG">KG</Option>
-              <Option value="TON">TON</Option>
-              <Option value="PIECE">PIECE</Option>
-              <Option value="METER">METER</Option>
-            </Select>
-          </Form.Item> */}
 
           <Form.Item label="Location" name="location">
             <Input placeholder="e.g. Warehouse A - Rack 5" />

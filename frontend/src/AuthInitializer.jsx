@@ -1,4 +1,3 @@
-// frontend/src/AuthInitializer.jsx
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from '@clerk/clerk-react';

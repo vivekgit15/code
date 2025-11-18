@@ -11,22 +11,23 @@ import {
   Card,
 } from 'antd';
 import axios from 'axios';
-import { useUser } from '@clerk/clerk-react'; // ✅ make sure this is imported
+import { useUser } from '@clerk/clerk-react'; 
 
 const { Option } = Select;
 
 const AddTransaction = () => {
-  const { user } = useUser(); // ✅ use inside component
+  const { user } = useUser(); 
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [selectedInventoryDetails, setSelectedInventoryDetails] = useState(null);
 
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const res = await axios.get('http://localhost:8000/api/inventory');
+        const res = await axios.get(`${backendUrl}/inventory`);
         setInventory(res.data?.data || []);
       } catch (error) {
         console.error(error);
@@ -38,7 +39,7 @@ const AddTransaction = () => {
 
   const handleInventorySelect = async (inventoryId) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/inventory/${inventoryId}`);
+      const res = await axios.get(`${backendUrl}/inventory/${inventoryId}`);
       setSelectedInventoryDetails(res.data);
     } catch (error) {
       console.error('Error fetching inventory details:', error);
@@ -51,7 +52,7 @@ const AddTransaction = () => {
       setLoading(true);
 
       if (values.type === 'OUT') {
-        const balanceRes = await axios.get(`http://localhost:8000/api/inventory/balance/${values.inventory}`);
+        const balanceRes = await axios.get(`${backendUrl}/inventory/balance/${values.inventory}`);
         const currentBalance = balanceRes.data.balance;
 
         if (values.quantity > currentBalance) {
@@ -66,10 +67,10 @@ const AddTransaction = () => {
         type: values.type,
         quantity: values.quantity,
         remarks: values.remarks || '',
-        userEmail: user?.primaryEmailAddress?.emailAddress, // ✅ correct placement
+        userEmail: user?.primaryEmailAddress?.emailAddress, 
       };
 
-      await axios.post('http://localhost:8000/api/transactions', transactionData);
+      await axios.post(`${backendUrl}/transactions`, transactionData);
       message.success(`Transaction (${values.type}) recorded successfully`);
       form.resetFields();
     } catch (error) {
@@ -92,7 +93,7 @@ const AddTransaction = () => {
       <Row justify="center">
         <Col xs={24} md={18} lg={14}>
           <Card
-            title="📦 Record Stock Transaction (IN / OUT)"
+            title="Record Stock Transaction (IN / OUT)"
             style={{
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
               borderRadius: '10px',

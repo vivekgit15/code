@@ -1,27 +1,54 @@
-// models/log.model.js
 const mongoose = require('mongoose');
 
-const logSchema = new mongoose.Schema(
+const nameRegex = /^[A-Za-z0-9\s\-\/\.]+$/;
+
+const productSchema = new mongoose.Schema(
   {
-    userId: { type: String, default: 'unknown' }, // Clerk user id or any identifier
-    userEmail: { type: String }, // optional human email if you want to store
-    action: { type: String, required: true }, // e.g. "Product Created"
-    entityType: { type: String }, // e.g. "Product", "Inventory", "Transaction", "Auth"
-    entityId: { type: mongoose.Schema.Types.ObjectId, default: null }, // optional reference id
-    details: { type: mongoose.Schema.Types.Mixed }, // object/string with extra info
-    
+    name: {
+      type: String,
+      required: [true, 'Product name is required'],
+      trim: true,
+      match: [nameRegex, 'Invalid product name'],
+    },
+    materialGrade: {
+      type: String,
+      required: [true, 'Material grade is required'],
+      trim: true,
+      match: [nameRegex, 'Invalid material grade'],
+    },
+    type: {
+      type: String,
+      required: [true, 'Product type is required'],
+      trim: true,
+      match: [nameRegex, 'Invalid type '],
+    },
+    thickness: Number,
+    diameter: Number,
+    length: Number,
+    width: Number,
+    unit: {
+      type: String,
+      enum: {
+        values: ['KG', 'METER', 'FEET', 'MM', 'METRIC TON', 'QUINTAL', 'PIECES'],
+        message: 'Invalid unit type',
+      },
+      required: [true, 'Unit is required'],
+    },
+    pricePerUnit: { type: Number, required: [true, 'Price per unit is required'] , min: [1, 'Price per unit must be at least ₹1'],
+      max: [1000000, 'Price per unit cannot exceed ₹10,00,000'],},
+    weightPerUnit: { type: Number, required: [true, 'Weight per unit is required'] , min: [1, 'Price per unit must be at least ₹1'],
+      max: [1000000, 'Price per unit cannot exceed ₹10,00,000'],},
+    brand: {
+      type: String,
+      trim: true,
+      match: [nameRegex, 'Invalid Brand'],
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: true }
 );
 
-// logSchema.set("toJSON", {
-//   transform: (doc, ret) => {
-//     if (typeof ret.details === "object")
-//       ret.details = Object.entries(ret.details)
-//         .map(([k, v]) => `${k}: ${v}`)
-//         .join(" | ");
-//     return ret;
-//   },
-// });
-
-module.exports = mongoose.model('ActivityLog', logSchema);
+module.exports = mongoose.model('Product', productSchema);

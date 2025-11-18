@@ -6,15 +6,15 @@ import dayjs from "dayjs";
 const ViewLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // ✅ Fetch all logs
+  // Fetch all logs
   const fetchLogs = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8000/api/logs");
+      const res = await axios.get(`${backendUrl}/logs`);
       setLogs(res.data?.data || []);
     } catch (error) {
-      console.error("Error fetching logs:", error);
       message.error("Failed to load logs");
     } finally {
       setLoading(false);
@@ -25,12 +25,12 @@ const ViewLogs = () => {
     fetchLogs();
   }, []);
 
-  // ✅ Print handler
+  // Print handler
   const handlePrint = () => {
     window.print();
   };
 
-  // ✅ Columns
+  // Columns
   const columns = [
     {
       title: "User Email",
@@ -102,7 +102,7 @@ const ViewLogs = () => {
       }}
     >
       <Card
-        title="🧾 Activity Logs"
+        title="Activity Logs"
         extra={
           <Button type="primary" onClick={handlePrint}>
             🖨 Print Logs
@@ -123,7 +123,7 @@ const ViewLogs = () => {
         />
       </Card>
 
-      {/* ✅ PRINT STYLES */}
+      
       <style>
         {`
           /* General table layout */

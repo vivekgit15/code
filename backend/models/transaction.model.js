@@ -17,7 +17,7 @@ const transactionSchema = new mongoose.Schema(
       required: true,
     },
     remarks: String,
-    // lotNumber field removed from here
+  
   },
   { timestamps: true }
 );
