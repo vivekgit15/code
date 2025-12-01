@@ -202,7 +202,7 @@ const ViewInventory = () => {
         loading={loading}
         bordered
         pagination={{ pageSize: 10 }}
-        scroll :{true}
+        scroll = {{x:true}}
       />
 
       
