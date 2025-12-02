@@ -120,7 +120,6 @@ const ViewLogs = () => {
           loading={loading}
           pagination={{ pageSize: 10 }}
           className="logs-table"
-          scroll = {{x:true}}
         />
       </Card>
 
