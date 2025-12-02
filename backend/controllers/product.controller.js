@@ -205,7 +205,7 @@ const deleteProduct = async (req, res) => {
       await addLog({
         userId,
         userEmail,
-        action: "Product Deletion Blocked <br> Inventory Exists",
+        action: "Product Deletion Blocked Inventory Exists",
         entityType: "Product",
         entityId: req.params.id,
         ip: req.ip,
